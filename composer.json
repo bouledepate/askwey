@@ -1,0 +1,25 @@
+{
+    "name": "bouledepate/askwey",
+    "description": "Answers and questions platform",
+    "type": "project",
+    "require": {
+        "yiisoft/yii2": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Askwey\\App\\": "app/",
+            "Askwey\\Source\\": "src/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
+        }
+    }
+}
