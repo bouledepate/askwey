@@ -1,5 +1,7 @@
 <?php
 
+$database = require 'database.php';
+
 return [
     'id' => 'basic-console',
     'basePath' => dirname(__DIR__),
@@ -23,6 +25,7 @@ return [
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager'
-        ]
+        ],
+        'db' => $database
     ]
 ];
