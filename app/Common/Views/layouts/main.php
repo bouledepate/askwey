@@ -28,14 +28,14 @@ use yii\helpers\Url;
             </div>
             <?php if (Yii::$app->user->isGuest) { ?>
                 <div class="p-2 bd-highlight">
-                    <a class="btn btn-success" href="<?= Url::to(['auth/sign-up']) ?>">Зарегистрироваться</a>
+                    <a class="btn btn-outline-success" href="<?= Url::to(['auth/sign-up']) ?>">Зарегистрироваться</a>
                 </div>
                 <div class="p-2 bd-highlight">
-                    <a class="btn btn-primary" href="<?= Url::to(['auth/sign-in']) ?>">Войти</a>
+                    <a class="btn btn-outline-primary" href="<?= Url::to(['auth/sign-in']) ?>">Войти</a>
                 </div>
             <?php } else { ?>
                 <div class="p-2 bd-highlight">
-                    <a class="btn btn-secondary" href="<?= Url::to(['auth/sign-out']) ?>">Выйти</a>
+                    <a class="btn btn-outline-secondary" href="<?= Url::to(['auth/sign-out']) ?>">Выйти</a>
                 </div>
             <?php } ?>
         </div>

@@ -22,6 +22,7 @@ use yii\helpers\Html;
     <div class="container">
         <div class="d-flex justify-content-between py-3 mb-3 border-bottom">
             <h2><?= $this->title ?></h2>
+            <p><a href="<?= \yii\helpers\Url::to(['/']) ?>" class="btn btn-secondary">На главную</a></p>
         </div>
         <?= $content ?>
     </div>
