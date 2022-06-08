@@ -22,7 +22,7 @@ use yii\helpers\Html;
     <div class="container">
         <div class="d-flex justify-content-between py-3 mb-3 border-bottom">
             <h2>Панель администратора</h2>
-            <?= Yii::$app->user->isGuest ? '<button class="btn btn-primary">Sign in</button>' : '<button class="btn btn-secondary">Sign out</button>' ; ?>
+            <?= Yii::$app->user->isGuest ? '<button class="btn btn-primary">Войти</button>' : '<button class="btn btn-secondary">Выйти</button>' ; ?>
         </div>
         <?= $content ?>
     </div>

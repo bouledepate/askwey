@@ -21,7 +21,7 @@ use yii\helpers\Html;
     <?= $this->render('_begin_body') ?>
     <div class="container">
         <div class="d-flex justify-content-between py-3 mb-3 border-bottom">
-            <h2>Панель регистрации</h2>
+            <h2><?= $this->title ?></h2>
         </div>
         <?= $content ?>
     </div>

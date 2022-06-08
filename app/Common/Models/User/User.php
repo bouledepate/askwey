@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Askwey\App\Common\Models\User;
 
+use Askwey\App\Common\Enums\UserStatus;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
 
@@ -21,9 +23,14 @@ class User extends ActiveRecord
     public ?string $password = null;
     public ?string $passwordRepeat = null;
 
-    public UserProfile $profile;
-    public UserSecurity $security;
-    public UserSettings $settings;
+    /* @var UserProfile */
+    public $profile;
+
+    /* @var UserSecurity */
+    public $security;
+
+    /* @var UserSettings */
+    public $settings;
 
     public function __construct($config = [])
     {
@@ -94,5 +101,41 @@ class User extends ActiveRecord
 
             $this->addError($attribute, 'Ошибка валидации данных профиля.');
         }
+    }
+
+    public function afterFind()
+    {
+        parent::afterFind();
+
+        $this->profile = $this->getProfile();
+        $this->settings = $this->getSettings();
+        $this->security = $this->getSecurity();
+    }
+
+    public function getProfile(): ActiveRecord
+    {
+        return $this->hasOne(UserProfile::class, ['user_id' => 'id'])->one();
+    }
+
+    public function getSettings(): ActiveRecord
+    {
+        return $this->hasOne(UserSettings::class, ['user_id' => 'id'])->one();
+    }
+
+    public function getSecurity(): ActiveRecord
+    {
+        return $this->hasOne(UserSecurity::class, ['user_id' => 'id'])->one();
+    }
+
+    public static function findByEmail(string $email): ?self
+    {
+        $user = self::findOne(['email' => $email]);
+        return $user ? new self($user) : null;
+    }
+
+    public static function findByUsername(string $username): ?self
+    {
+        $user = self::findOne(['username' => $username]);
+        return $user ? new self($user) : null;
     }
 }

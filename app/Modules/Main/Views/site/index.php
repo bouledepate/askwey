@@ -2,6 +2,12 @@
 
 /** @var \yii\web\View $this */
 
-$this->title = 'Стартовая страница' ?>
+$this->title = 'Главная | Askwey' ?>
 
-<h1>Hello world</h1>
+<div class="row">
+    <?php if (Yii::$app->user->isGuest) { ?>
+        <?= $this->render('_guest_block') ?>
+    <?php } else { ?>
+        <h2>Добро пожаловать, <?= Yii::$app->user->identity->username ?></h2>
+    <?php } ?>
+ </div>

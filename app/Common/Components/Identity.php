@@ -9,7 +9,7 @@ use Askwey\App\Common\Models\User\User;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
 
-class Identity implements IdentityInterface
+class Identity implements ExtendedIdentityInterface
 {
     private User $user;
 
@@ -30,13 +30,19 @@ class Identity implements IdentityInterface
 
     public static function findIdentity($id): ?self
     {
-        $user = User::findOne(['id' => $id, 'status' => UserStatus::ACTIVE->value]);
+        $user = User::findOne(['id' => $id]);
         return $user ? new self($user) : null;
     }
 
     public static function findIdentityByAccessToken($token, $type = null): never
     {
         throw new NotSupportedException(__METHOD__ . ' not supported.');
+    }
+
+    public static function findIdentityByUsername($username): ?self
+    {
+        $user = User::findOne(['username' => $username]);
+        return $user ? new self($user) : null;
     }
 
     public function getId(): int
