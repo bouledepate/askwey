@@ -15,7 +15,8 @@ return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
-        '@public' => dirname(__DIR__) . '/public'
+        '@public' => dirname(__DIR__) . '/public',
+        '@static' => dirname(__DIR__) . '/static'
     ],
     'components' => [
         'request' => [
@@ -59,8 +60,18 @@ return [
         ],
         'user' => [
             'identityClass' => \Askwey\App\Common\Components\Identity::class
+        ],
+        'errorHandler' => [
+            'errorAction' => 'main/site/error'
         ]
     ],
     'modules' => $modules,
-    'params' => $params
+    'params' => $params,
+    'container' => [
+        'definitions' => [
+            'imageUploader' => [
+                'class' => \Askwey\App\Common\Components\ImageUploader::class
+            ]
+        ]
+    ]
 ];

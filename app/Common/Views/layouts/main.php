@@ -24,7 +24,7 @@ use yii\helpers\Url;
     <div class="container">
         <div class="d-flex bd-highlight mb-3 border-bottom">
             <div class="me-auto p-2 bd-highlight">
-                <h2>Askwey</h2>
+                <a class="fs-2 fw-bold text-black text-decoration-none" href="<?= Url::to(['/']) ?>">Askwey</a>
             </div>
             <?php if (Yii::$app->user->isGuest) { ?>
                 <div class="p-2 bd-highlight">
@@ -35,6 +35,10 @@ use yii\helpers\Url;
                 </div>
             <?php } else { ?>
                 <div class="p-2 bd-highlight">
+                    <span class="text-muted me-3">
+                        Вы авторизованы, как <a class="text-decoration-none fw-bold text-muted"
+                                                href="<?= Url::to(['profile/index', 'username' => Yii::$app->user->identity->username]) ?>"><?= Yii::$app->user->identity->username ?></a>
+                    </span>
                     <a class="btn btn-outline-secondary" href="<?= Url::to(['auth/sign-out']) ?>">Выйти</a>
                 </div>
             <?php } ?>

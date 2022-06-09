@@ -81,6 +81,15 @@ class User extends ActiveRecord
         ];
     }
 
+    public function extraFields(): array
+    {
+        return [
+            'settings',
+            'profile',
+            'security'
+        ];
+    }
+
     public function attributeLabels(): array
     {
         return [
@@ -129,13 +138,11 @@ class User extends ActiveRecord
 
     public static function findByEmail(string $email): ?self
     {
-        $user = self::findOne(['email' => $email]);
-        return $user ? new self($user) : null;
+        return self::findOne(['email' => $email]);
     }
 
     public static function findByUsername(string $username): ?self
     {
-        $user = self::findOne(['username' => $username]);
-        return $user ? new self($user) : null;
+        return self::findOne(['username' => $username]);
     }
 }

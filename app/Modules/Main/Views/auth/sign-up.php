@@ -17,7 +17,8 @@ $this->title = 'Панель регистрации' ?>
         $form = ActiveForm::begin([
             'id' => 'login-form-horizontal',
             'type' => ActiveForm::TYPE_HORIZONTAL,
-            'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_X_SMALL]
+            'formConfig' => ['labelSpan' => 3, 'deviceSize' => ActiveForm::SIZE_X_SMALL],
+            'options' => ['enctype' => 'multipart/form-data']
         ]);
         ?>
         <h4>Информация об аккаунте</h4>
