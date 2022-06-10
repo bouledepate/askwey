@@ -1,6 +1,9 @@
 <?php
 
-return array_merge(
-    require dirname(__DIR__) . '\app\Modules\Main\config\routes.php',
-    require dirname(__DIR__) . '\app\Modules\Admin\config\routes.php'
-);
+return [
+    '' => 'site/index',
+    'auth/sign-up' => 'auth/sign-up',
+    'auth/sign-in' => 'auth/sign-in',
+    'auth/sign-out' => 'auth/sign-out',
+    'profile/<username>' => 'profile/index'
+];

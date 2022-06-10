@@ -9,9 +9,9 @@ return [
     'id' => 'askwey-app',
     'basePath' => dirname(__DIR__),
     'language' => 'ru-RU',
-    'controllerNamespace' => 'Askwey\App\Common\Controllers',
-    'viewPath' => dirname(__DIR__) . '/app/Common/Views',
-    'layoutPath' => dirname(__DIR__) . '/app/Common/Views/layouts',
+    'controllerNamespace' => 'Askwey\App\Controllers',
+    'viewPath' => dirname(__DIR__) . '/app/Views',
+    'layoutPath' => dirname(__DIR__) . '/app/Views/layouts',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
@@ -59,7 +59,7 @@ return [
             ],
         ],
         'user' => [
-            'identityClass' => \Askwey\App\Common\Components\Identity::class
+            'identityClass' => \Askwey\App\Components\Identity::class
         ],
         'errorHandler' => [
             'errorAction' => 'main/site/error'
@@ -70,7 +70,7 @@ return [
     'container' => [
         'definitions' => [
             'imageUploader' => [
-                'class' => \Askwey\App\Common\Components\ImageUploader::class
+                'class' => \Askwey\App\Components\ImageUploader::class
             ]
         ]
     ]
