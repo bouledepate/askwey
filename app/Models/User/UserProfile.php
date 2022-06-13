@@ -41,7 +41,8 @@ class UserProfile extends ActiveRecord
             return false;
         }
 
-        $this->avatar = \Yii::$container->get('imageUploader')->uploadImageByModel($this, 'avatar');
+        if ($filename = \Yii::$container->get('imageUploader')->uploadImageByModel($this, 'avatar'))
+            $this->avatar = $filename;
 
         return true;
     }

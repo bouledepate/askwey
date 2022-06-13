@@ -16,7 +16,7 @@ $this->title = 'Панель авторизации' ?>
         <?php
         $form = ActiveForm::begin([
             'id' => 'login-form-vertical',
-            'type' => ActiveForm::TYPE_FLOATING
+            'type' => ActiveForm::TYPE_INLINE
         ]);
         ?>
         <?= $form->field($model, 'username') ?>

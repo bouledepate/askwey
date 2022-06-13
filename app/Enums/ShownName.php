@@ -12,4 +12,23 @@ enum ShownName: int
     {
         return array_column(self::cases(), 'value');
     }
+
+    public static function titles(): array
+    {
+        return [
+            self::USERNAME->value => 'Имя аккаунта',
+            self::PREFERRED_NAME->value => 'Псевдоним',
+            self::REAL_NAME->value => 'Настоящее имя'
+        ];
+    }
+
+    public static function getTitie(int $option): string
+    {
+        return match ($option) {
+            self::USERNAME->value => 'Имя аккаунта',
+            self::PREFERRED_NAME->value => 'Псевдоним',
+            self::REAL_NAME->value => 'Настоящее имя',
+            default => '(Не определено)'
+        };
+    }
 }

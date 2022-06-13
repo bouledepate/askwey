@@ -12,7 +12,7 @@ final class ImageUploader
 {
     protected string $staticPath;
     protected ?string $currentImage;
-    protected UploadedFile $file;
+    protected ?UploadedFile $file;
 
     public function __construct()
     {
@@ -23,6 +23,10 @@ final class ImageUploader
     public function uploadImageByModel(ActiveRecord|Model $model, string $attribute, bool $deleteCurrent = true): string|false
     {
         $this->file = UploadedFile::getInstance($model, $attribute);
+
+        if (!$this->file)
+            return false;
+
         $this->setCurrentImagePath($model->$attribute);
 
         if ($deleteCurrent && $this->isExist())

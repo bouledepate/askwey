@@ -59,10 +59,11 @@ return [
             ],
         ],
         'user' => [
-            'identityClass' => \Askwey\App\Components\Identity::class
+            'identityClass' => \Askwey\App\Components\Identity::class,
+            'loginUrl' => ['auth/sign-in'],
         ],
         'errorHandler' => [
-            'errorAction' => 'main/site/error'
+            'errorAction' => 'site/error'
         ]
     ],
     'modules' => $modules,

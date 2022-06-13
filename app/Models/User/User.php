@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Askwey\App\Models\User;
 
+use Askwey\App\Enums\QuestionState;
 use Askwey\App\Enums\UserStatus;
+use Askwey\App\Models\Question;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -144,5 +146,29 @@ class User extends ActiveRecord
     public static function findByUsername(string $username): ?self
     {
         return self::findOne(['username' => $username]);
+    }
+
+    public function getAllQuestions()
+    {
+        return $this->hasMany(Question::class, ['member_id' => 'id'])
+            ->where(['state' => QuestionState::NEW->value])
+            ->orderBy(['state' => SORT_ASC, 'date_create' => SORT_DESC]);
+    }
+
+    public function getAllOwnQuestions()
+    {
+        return $this->hasMany(Question::class, ['author_id' => 'id']);
+    }
+
+    public function getAllOwnPublicQuestions()
+    {
+        return $this->hasMany(Question::class, ['author_id' => 'id'])
+            ->where(['state' => QuestionState::NEW->value, 'member_id' => null]);
+    }
+
+    public function getCountOfAllNewQuestions()
+    {
+        return $this->hasMany(Question::class, ['member_id' => 'id'])
+            ->where(['state' => QuestionState::NEW->value])->count();
     }
 }
