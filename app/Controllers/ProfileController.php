@@ -55,8 +55,12 @@ class ProfileController extends Controller
         $this->getUser($username ?? \Yii::$app->user->identity->username);
 
         $questionForm = new Question();
-        if (\Yii::$app->request->isPost)
+        if ($questionForm->load(\Yii::$app->request->post()))
             return $this->questionFormValidation($questionForm);
+
+        $answerForm = new Answer();
+        if ($answerForm->load(\Yii::$app->request->post()))
+            return $this->answerFormValidation($answerForm);
 
         $questions = new ActiveDataProvider([
             'query' => $this->user->getAllOwnPublicQuestions()
@@ -65,6 +69,7 @@ class ProfileController extends Controller
         return $this->render('index', [
             'model' => $this->user,
             'questionForm' => $questionForm,
+            'answerForm' => $answerForm,
             'questions' => $questions
         ]);
     }
@@ -83,17 +88,10 @@ class ProfileController extends Controller
     {
         $answerForm = new Answer();
 
-        $questionsDataProvider = new ActiveDataProvider([
-            'query' => \Yii::$app->user->identity->getAllQuestions(),
-            'pagination' => [
-                'pageSize' => 20
-            ]
-        ]);
+        if (\Yii::$app->request->isPost)
+            return $this->answerFormValidation($answerForm);
 
-        return $this->render('questions', [
-            'questionsDataProvider' => $questionsDataProvider,
-            'answerForm' => $answerForm
-        ]);
+        return $this->render('questions', ['answerForm' => $answerForm]);
     }
 
     public function actionOwnQuestions()
@@ -108,37 +106,6 @@ class ProfileController extends Controller
         return $this->render('own_questions', [
             'questionsDataProvider' => $questionsDataProvider
         ]);
-    }
-
-    public function actionHideQuestion(int $questionId)
-    {
-        $question = Question::findOne(['id' => $questionId]);
-
-        if (!$question)
-            throw new NotFoundHttpException('Вопрос в системе не найден.');
-
-        if ($question->author_id !== \Yii::$app->user->id)
-            throw new ForbiddenHttpException('У вас нет доступа к редактированию данного вопроса.');
-
-        $question->state == QuestionState::HIDDEN->value
-            ? $state = QuestionState::NEW
-            : $state = QuestionState::HIDDEN;
-
-        if ($question->updateState($state)) {
-            if ($state == QuestionState::HIDDEN)
-                \Yii::$app->session->setFlash('success', 'Этот вопрос более не показывается у других пользователей или на вашей странице.');
-            else
-                \Yii::$app->session->setFlash('success', 'Этот вопрос снова показывается у других пользователей или на вашей странице.');
-        } else {
-            \Yii::$app->session->setFlash('error', 'При скрытии вопроса произошла ошибка. Попробуйте позднее или обратитесь в поддержку.');
-        }
-
-        return $this->redirect(\Yii::$app->request->referrer);
-    }
-
-    public function actionDeleteQuestion(int $questionId)
-    {
-
     }
 
     private function getUser(string $username): void
@@ -171,7 +138,7 @@ class ProfileController extends Controller
 
     private function questionFormValidation(Question &$model)
     {
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+        if ($model->save()) {
             $message = !empty($model->member_id)
                 ? 'Ваш вопрос отправлен пользователю ' . $model->member->profile->getProfileName()
                 : 'Ваш вопрос опубликован на вашей странице.';
@@ -179,6 +146,18 @@ class ProfileController extends Controller
             \Yii::$app->session->setFlash('success', $message);
         } else
             \Yii::$app->session->setFlash('error', 'Вопрос не удалось отправить. Попробуйте позднее.');
+
+        return $this->redirect(\Yii::$app->request->referrer);
+    }
+
+    private function answerFormValidation(Answer &$model)
+    {
+        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+            $model->question->updateState(QuestionState::HAS_ANSWER);
+            $author = $model->question->author?->profile->getProfileName();
+            \Yii::$app->session->setFlash('success', 'Ваш ответ отправлен пользователю ' . $author);
+        } else
+            \Yii::$app->session->setFlash('error', 'Ответ не удалось отправить. Попробуйте позднее.');
 
         return $this->redirect(\Yii::$app->request->referrer);
     }

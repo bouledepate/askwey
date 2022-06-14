@@ -148,11 +148,9 @@ class User extends ActiveRecord
         return self::findOne(['username' => $username]);
     }
 
-    public function getAllQuestions()
+    public function getQuestions()
     {
-        return $this->hasMany(Question::class, ['member_id' => 'id'])
-            ->where(['state' => QuestionState::NEW->value])
-            ->orderBy(['state' => SORT_ASC, 'date_create' => SORT_DESC]);
+        return $this->hasMany(Question::class, ['member_id' => 'id']);
     }
 
     public function getAllOwnQuestions()
@@ -163,7 +161,7 @@ class User extends ActiveRecord
     public function getAllOwnPublicQuestions()
     {
         return $this->hasMany(Question::class, ['author_id' => 'id'])
-            ->where(['state' => QuestionState::NEW->value, 'member_id' => null]);
+            ->where(['member_id' => null, 'state' => [QuestionState::NEW->value, QuestionState::HAS_ANSWER->value]]);
     }
 
     public function getCountOfAllNewQuestions()

@@ -3,6 +3,7 @@
  * @var \yii\web\View $this
  * @var \Askwey\App\Models\User\User $model
  * @var \Askwey\App\Models\Question $questionForm
+ * @var \Askwey\App\Models\Answer $answerForm
  * @var \yii\data\ActiveDataProvider $questions
  */
 
@@ -53,7 +54,8 @@ else
             <div class="row mt-2">
                 <div class="col">
                     <div class="d-grid gap-2">
-                        <a href="<?= \yii\helpers\Url::to(['profile/own-questions']) ?>" class="btn btn-light shadow-sm" type="button">Ваши вопросы / ответы</a>
+                        <a href="<?= \yii\helpers\Url::to(['profile/own-questions']) ?>" class="btn btn-light shadow-sm"
+                           type="button">Ваши вопросы / ответы</a>
                         <a href="<?= \yii\helpers\Url::to(['profile/questions']) ?>" class="btn btn-light shadow-sm"
                            type="button">Вопросы для вас <?php
                             $count = Yii::$app->user->identity->getCountOfAllNewQuestions();
@@ -70,12 +72,12 @@ else
             <div class="flex-grow-1">
                 <span class="fs-4 fw-bold"><?= $model->profile->getProfileName() ?></span>
             </div>
+            <?php if (!Yii::$app->user->isGuest && $model->id == Yii::$app->user->id) { ?>
             <div>
                 <a href="<?= \yii\helpers\Url::to(['profile/settings']) ?>" class="btn btn-sm btn-light shadow-sm"
                    title="Настройки профиля"><i class="fas fa-bars"></i></a>
-                <a class="btn btn-sm btn-light shadow-sm" title="Редактировать пользователя"><i
-                            class="fas fa-user-cog"></i></a>
             </div>
+            <?php } ?>
         </div>
         <div class="row border-bottom mb-2 pb-2">
             <div class="col">
@@ -83,46 +85,47 @@ else
             </div>
         </div>
         <?php if ($model->id !== Yii::$app->user->id) { ?>
-            <div class="row border-bottom mt-4 mb-2 pb-2">
-                <div class="col-8">
-                    <p>
-                        <button class="btn btn-warning shadow-sm" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                            Задать вопрос
-                        </button>
-                    </p>
-                    <div class="collapse" id="collapseExample">
-                        <div class="card card-body">
-                            <?php $form = \kartik\form\ActiveForm::begin([
-                                'enableAjaxValidation' => false,
-                                'type' => ActiveForm::TYPE_FLOATING,
-                                'fieldConfig' => ['options' => ['class' => 'form-group mb-3 mr-2 me-2']]
-                            ]) ?>
-                            <?= $form->field($questionForm, 'description')->textarea()->label(false) ?>
-                            <?php if (!Yii::$app->user->isGuest) { ?>
-                                <?= $form->field($questionForm, 'is_anonymous')->checkbox() ?>
-                            <?php } ?>
-                            <?= $form->field($questionForm, 'member_id')->hiddenInput(['value' => $model->id])->label(false) ?>
-                            <?= $form->field($questionForm, 'author_id')->hiddenInput(['value' => Yii::$app->user->id ?? ''])->label(false) ?>
-                            <?= Html::submitButton('Отправить вопрос', ['class' => 'btn btn-primary mr-1 shadow-sm']) ?>
-                            <?php \kartik\form\ActiveForm::end() ?>
+            <?php if (!Yii::$app->user->isGuest) { ?>
+                <div class="row border-bottom mt-4 mb-2 pb-2">
+                    <div class="col-8">
+                        <p>
+                            <button class="btn btn-warning shadow-sm" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseExample" aria-expanded="false"
+                                    aria-controls="collapseExample">
+                                Задать вопрос
+                            </button>
+                        </p>
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body">
+                                <?php $form = \kartik\form\ActiveForm::begin([
+                                    'enableAjaxValidation' => false,
+                                    'type' => ActiveForm::TYPE_FLOATING,
+                                    'fieldConfig' => ['options' => ['class' => 'form-group mb-3 mr-2 me-2']]
+                                ]) ?>
+                                <?= $form->field($questionForm, 'description')->textarea()->label(false) ?>
+                                <?php if (!Yii::$app->user->isGuest) { ?>
+                                    <?= $form->field($questionForm, 'is_anonymous')->checkbox() ?>
+                                <?php } ?>
+                                <?= $form->field($questionForm, 'member_id')->hiddenInput(['value' => $model->id])->label(false) ?>
+                                <?= $form->field($questionForm, 'author_id')->hiddenInput(['value' => Yii::$app->user->id ?? ''])->label(false) ?>
+                                <?= Html::submitButton('Отправить вопрос', ['class' => 'btn btn-primary mr-1 shadow-sm']) ?>
+                                <?php \kartik\form\ActiveForm::end() ?>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row border-bottom mb-2 pb-2">
+            <?php } ?>
+            <div class="row">
                 <div class="col">
                     <h5>Опубликованные вопросы.</h5>
                     <?= \yii\widgets\ListView::widget([
                         'dataProvider' => $questions,
                         'itemView' => 'partial/_public_question',
                         'layout' => "{pager}\n{items}\n{pager}",
+                        'viewParams' => [
+                            'form' => $answerForm
+                        ]
                     ]) ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <h5>Опубликованные ответы.</h5>
                 </div>
             </div>
         <?php } else { ?>

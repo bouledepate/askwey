@@ -23,7 +23,6 @@ class m220613_144016_create_answer_table extends Migration
             'author_id' => $this->integer()->null(),
             'state' => $this->integer()->defaultValue(1),
             'is_anonymous' => $this->integer()->defaultValue(0),
-            'is_public' => $this->integer()->defaultValue(0),
             'date_create' => $this->timestamp(),
         ]);
 

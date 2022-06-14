@@ -9,6 +9,7 @@ $this->title = 'Вопросы для вас';
 
 use kartik\alert\Alert;
 use yii\bootstrap5\Html;
+use yii\data\ActiveDataProvider;
 
 ?>
 
@@ -44,8 +45,10 @@ use yii\bootstrap5\Html;
         <div class="row mt-2">
             <div class="col">
                 <div class="d-grid gap-2">
-                    <a href="<?= \yii\helpers\Url::to(['profile/index']) ?>" class="btn btn-light shadow-sm" type="button">Ваш профиль</a>
-                    <a href="<?= \yii\helpers\Url::to(['profile/own-questions']) ?>" class="btn btn-light shadow-sm" type="button">Ваши вопросы / ответы</a>
+                    <a href="<?= \yii\helpers\Url::to(['profile/index']) ?>" class="btn btn-light shadow-sm"
+                       type="button">Ваш профиль</a>
+                    <a href="<?= \yii\helpers\Url::to(['profile/own-questions']) ?>" class="btn btn-light shadow-sm"
+                       type="button">Ваши вопросы / ответы</a>
                 </div>
             </div>
         </div>
@@ -53,11 +56,37 @@ use yii\bootstrap5\Html;
     <div class="col-9">
         <div class="d-flex border-bottom mb-2 pb-2">
             <div class="flex-grow-1">
-                <span class="fs-4 fw-bold">Перечень всех заданных вам вопросов</span>
+                <span class="fs-4 fw-bold">Новые вопросы для вас.</span>
             </div>
         </div>
         <?= \yii\widgets\ListView::widget([
-            'dataProvider' => $questionsDataProvider,
+            'dataProvider' => new ActiveDataProvider([
+                'query' => \Yii::$app->user->identity->getQuestions()->where([
+                    'state' => \Askwey\App\Enums\QuestionState::NEW->value,
+                ])->orderBy(['state' => SORT_ASC, 'date_create' => SORT_DESC]),
+                'pagination' => [
+                    'pageSize' => 20
+                ]
+            ]),
+            'itemView' => 'partial/_question',
+            'viewParams' => [
+                'form' => $answerForm
+            ]
+        ]) ?>
+        <div class="d-flex border-bottom mb-2 pb-2">
+            <div class="flex-grow-1">
+                <span class="fs-4 fw-bold">Отвеченные вопросы</span>
+            </div>
+        </div>
+        <?= \yii\widgets\ListView::widget([
+            'dataProvider' => new ActiveDataProvider([
+                'query' => \Yii::$app->user->identity->getQuestions()->where([
+                    'state' => \Askwey\App\Enums\QuestionState::HAS_ANSWER->value,
+                ])->orderBy(['state' => SORT_ASC, 'date_create' => SORT_DESC]),
+                'pagination' => [
+                    'pageSize' => 20
+                ]
+            ]),
             'itemView' => 'partial/_question',
             'viewParams' => [
                 'form' => $answerForm
